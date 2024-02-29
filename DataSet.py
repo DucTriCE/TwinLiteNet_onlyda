@@ -25,7 +25,7 @@ def random_perspective(combination,  degrees=10, translate=.1, scale=.1, shear=1
     """combination of img transform"""
     # torchvision.transforms.RandomAffine(degrees=(-10, 10), translate=(.1, .1), scale=(.9, 1.1), shear=(-10, 10))
     # targets = [cls, xyxy]
-    img, gray, line = combination
+    img, gray = combination
     height = img.shape[0] + border[0] * 2  # shape(h,w,c)
     width = img.shape[1] + border[1] * 2
 
