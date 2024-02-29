@@ -85,10 +85,10 @@ class MyDataset(torch.utils.data.Dataset):
         self.Tensor = transforms.ToTensor()
         self.valid=valid
         if valid:
-            self.root='/home/ceec/huycq/data/bdd100k/images/val'
+            self.root='./dataset/images/val'
             self.names=os.listdir(self.root)
         else:
-            self.root='/home/ceec/huycq/data/bdd100k/images/train'
+            self.root='./dataset/images/train'
             self.names=os.listdir(self.root)
 
     def __len__(self):
@@ -105,7 +105,7 @@ class MyDataset(torch.utils.data.Dataset):
         image_name=os.path.join(self.root,self.names[idx])
         
         image = cv2.imread(image_name)
-        label1 = cv2.imread(image_name.replace("images","segments").replace("jpg","png"), 0)
+        label1 = cv2.imread(image_name.replace("images","segment").replace("jpg","png"), 0)
 
         if not self.valid:
             if random.random()<0.5:

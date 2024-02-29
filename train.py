@@ -76,7 +76,10 @@ def train_net(args):
         train( args, trainLoader, model, criteria, optimizer, epoch)
         model.eval()
         # validation
-        val(valLoader, model)
+        da_segment_results=val(valLoader, model)
+        msg =  'Driving area Segment: Acc({da_seg_acc:.3f})    IOU ({da_seg_iou:.3f})    mIOU({da_seg_miou:.3f})'.format(
+                    da_seg_acc=da_segment_results[0],da_seg_iou=da_segment_results[1],da_seg_miou=da_segment_results[2])
+        print(msg)
         torch.save(model.state_dict(), model_file_name)
         
         save_checkpoint({
