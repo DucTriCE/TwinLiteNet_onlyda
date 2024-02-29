@@ -108,11 +108,11 @@ class MyDataset(torch.utils.data.Dataset):
         
         image = cv2.imread(image_name)
         label1 = cv2.imread(image_name.replace("images","segments").replace("jpg","png"), 0)
-        label2 = cv2.imread(image_name.replace("images","lane").replace("jpg","png"), 0)
+
         if not self.valid:
             if random.random()<0.5:
-                combination = (image, label1, label2)
-                (image, label1, label2)= random_perspective(
+                combination = (image, label1)
+                (image, label1)= random_perspective(
                     combination=combination,
                     degrees=10,
                     translate=0.1,
@@ -124,29 +124,21 @@ class MyDataset(torch.utils.data.Dataset):
             if random.random() < 0.5:
                 image = np.fliplr(image)
                 label1 = np.fliplr(label1)
-                label2 = np.fliplr(label2)
             
         label1 = cv2.resize(label1, (W_, H_))
-        label2 = cv2.resize(label2, (W_, H_))
         image = cv2.resize(image, (W_, H_))
 
         _,seg_b1 = cv2.threshold(label1,1,255,cv2.THRESH_BINARY_INV)
-        _,seg_b2 = cv2.threshold(label2,1,255,cv2.THRESH_BINARY_INV)
         _,seg1 = cv2.threshold(label1,1,255,cv2.THRESH_BINARY)
-        _,seg2 = cv2.threshold(label2,1,255,cv2.THRESH_BINARY)
 
         seg1 = self.Tensor(seg1)
-        seg2 = self.Tensor(seg2)
         seg_b1 = self.Tensor(seg_b1)
-        seg_b2 = self.Tensor(seg_b2)
         seg_da = torch.stack((seg_b1[0], seg1[0]),0)
-        seg_ll = torch.stack((seg_b2[0], seg2[0]),0)
+
         image = image[:, :, ::-1].transpose(2, 0, 1)
         image = np.ascontiguousarray(image)
-
-
        
-        return image_name,torch.from_numpy(image),(seg_da,seg_ll)
+        return image_name,torch.from_numpy(image),(seg_da)
     
 
 

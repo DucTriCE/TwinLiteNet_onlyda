@@ -26,7 +26,6 @@ class TotalLoss(nn.Module):
         self.tvk_loss_history = []
 
         self.seg_tver_da = TverskyLoss(mode="multiclass", alpha=0.7, beta=0.3, gamma=4.0/3, from_logits=True)
-        self.seg_tver_ll = TverskyLoss(mode="multiclass", alpha=0.9, beta=0.1, gamma=4.0/3, from_logits=True)
         self.seg_focal = FocalLossSeg(mode="multiclass", alpha=0.25)
         # self.seg_criterion3 = FocalLossSeg(mode="multiclass", alpha=1)
 
@@ -34,19 +33,14 @@ class TotalLoss(nn.Module):
 
     def forward(self, outputs, targets):
         
-        seg_da,seg_ll=targets
-        out_da,out_ll=outputs
+        seg_da=targets
+        out_da=outputs
 
         _,seg_da= torch.max(seg_da, 1)
         seg_da=seg_da.cuda()
 
-        _,seg_ll= torch.max(seg_ll, 1)
-        seg_ll=seg_ll.cuda()
-
-
-        tversky_loss = self.seg_tver_da(out_da, seg_da)+self.seg_tver_ll(out_ll, seg_ll)
-        focal_loss = self.seg_focal(out_ll, seg_ll)+self.seg_focal(out_da, seg_da)
-
+        tversky_loss = self.seg_tver_da(out_da, seg_da)
+        focal_loss = self.seg_focal(out_da, seg_da)
 
         loss = focal_loss+tversky_loss
         # print(loss1.item(),skyl1.item(),loss2.item(),skyl2.item())
