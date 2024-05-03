@@ -1,4 +1,5 @@
 # TwinLiteNet: An Efficient and Lightweight Model for Driveable Area and Lane Segmentation in Self-Driving Cars
+# Version: Only Drivable Area Detection
 
 
 
